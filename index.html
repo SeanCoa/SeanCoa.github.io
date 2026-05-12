@@ -189,13 +189,13 @@
     }
 
     .cert-banner {
-      background-color: #333;
-      padding: 10px 0;
       display: flex;
+      flex-direction: row;
       justify-content: center;
       align-items: center;
       gap: 40px;
-      font-family: sans-serif;
+      background-color: #333;
+      padding: 20px 0;
     }
 
     .cert-banner a {
@@ -216,6 +216,13 @@
       letter-spacing: 1px;
       margin-right: 20px;
       padding-right: 20px;
+    }
+
+    .cert-icons-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 40px;
     }
 
     .cert-banner img {
@@ -346,10 +353,23 @@
         justify-content: center;
         width: 100%;
       }
-      .nd-link { order: 1; }       /* ND Logo at top */
-      .banner__content { order: 2; } /* Your Name in middle */
-      .social-links { order: 3; }    /* Social Icons below name */
-      .banner-nav { order: 4; }      /* Nav links at the very bottom */
+      .resume-link {
+        position: static;
+        margin: 10px auto;
+        justify-content: center;
+        width: 100%;
+      }
+      .nd-link { order: 1; }
+      .banner__content { order: 2; }
+      .social-links { order: 3; }
+      .banner-nav { order: 4; }
+      .resume-link {order: 5; }
+
+      .cert-banner {
+        flex-direction: column;
+        gap: 20px;
+        padding: 30px 20px;
+      }
 
       .banner__text {
         font-size: 2.8rem;
@@ -475,15 +495,17 @@
 
 <div class="cert-banner">
   <span class="cert-inline-text">Certifications:</span>
-  <a href="https://www.lpi.org/our-certifications/linux-essentials-overview" target="_blank">
-    <img src="img/LPI.png" alt="LPI Linux Essentials" title="LPI Linux Essentials">
-  </a>
-  <a href="https://aws.amazon.com/certification/certified-cloud-practitioner/" target="_blank">
-    <img src="img/CloudPractitioner.png" alt="AWS Cloud Practitioner" title="AWS Cloud Practitioner">
-  </a>
-  <a href="https://aws.amazon.com/certification/certified-solutions-architect-associate/" target="_blank">
-    <img src="img/SolutionsArchitect.png" alt="AWS Solutions Architect" title="AWS Solutions Architect">
-  </a>
+  <div class="cert-icons-row">
+    <a href="https://www.lpi.org/..." target="_blank">
+      <img src="img/LPI.png" alt="LPI Linux Essentials">
+    </a>
+    <a href="https://aws.amazon.com/..." target="_blank">
+      <img src="img/CloudPractitioner.png" alt="AWS Cloud Practitioner">
+    </a>
+    <a href="https://aws.amazon.com/..." target="_blank">
+      <img src="img/SolutionsArchitect.png" alt="AWS Solutions Architect">
+    </a>
+  </div>
 </div>
 
 <section id="coursework" class="coursework-section">
