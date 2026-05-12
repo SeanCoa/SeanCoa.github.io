@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sean Coath</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Monoton&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    html, body {
+      margin: 0;
+    }
+    .space-mono-regular {
+      font-family: "Space Mono", monospace;
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    .banner {
+      position: relative;
+      background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("./img/banner-image.png");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      min-height: 150px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .social-links {
+      position: absolute;
+      bottom: 15px;
+      left: 20px;
+      display: flex;
+      gap: 25px;
+    }
+
+    .social-links a {
+      color: white;
+      font-size: 1.8rem;
+      transition: transform 0.3s ease, color 0.3s ease;
+      text-decoration: none;
+    }
+
+    .social-links a:hover {
+      color: #b3d4fc;
+      transform: scale(1.1);
+    }
+
+    .banner-nav {
+      position: absolute;
+      bottom: 20px;
+      right: 25px; /* Pinned to the right */
+      display: flex;
+      gap: 30px;
+    }
+
+    .banner-nav a {
+      color: white;
+      text-decoration: none;
+      font-family: "Space Mono", monospace;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      letter-spacing: 2px;
+      transition: color 0.3s ease;
+    }
+
+    .banner-nav a:hover {
+      color: #b3d4fc;
+    }
+
+    .nd-link {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      z-index: 10; /* Ensures it stays above the banner background */
+    }
+
+    .nd-link img {
+      height: 50px; /* Adjust height based on your specific PNG logo */
+      width: auto;
+      opacity: 0.8;
+    }
+
+    .nd-link:hover {
+      transform: scale(1.05);
+      opacity: 1;
+    }
+
+    .resume-link {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: white;
+      text-decoration: none;
+      font-family: "Space Mono", monospace;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      letter-spacing: 2px;
+      transition: transform 0.3s ease, color 0.3s ease;
+      z-index: 10;
+    }
+
+    .resume-link i {
+      font-size: 1.2rem;
+    }
+
+    .resume-link:hover {
+      color: #b3d4fc;
+      transform: scale(1.05);
+    }
+
+    .banner__text {
+      line-height: 1.4;
+      font-family: "Monoton", sans-serif;
+      text-align: center;
+      font-size: 4rem;
+      color: white;
+    }
+
+    .about-section {
+      padding: 0px 20px;
+      background-color: white;
+    }
+
+    .about-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 50px;
+    }
+
+    .about-content {
+      flex: 2; /* Takes up more space than the image */
+      font-family: "Space Mono", monospace;
+      color: #333;
+    }
+
+    .about-content h2 {
+      font-family: "Space Mono", monospace;
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      color: #333;
+    }
+
+    .location-tag {
+      font-family: "Space Mono", monospace;
+      font-size: 1rem;
+      color: #666; /* A subtle gray to differentiate from the header */
+      margin-top: -10px; /* Pulls it closer to the "About Me" header */
+      margin-bottom: 20px; /* Adds space before the paragraph text starts */
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: 1px;
+    }
+
+    .location-tag i {
+      color: #002b5b; /* Matches your Notre Dame Navy color */
+    }
+
+    .about-image {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+    }
+
+    .about-image img {
+      width: 300px;
+      height: 300px;
+      border-radius: 50%; /* Makes it a circle */
+      object-fit: cover; /* Prevents image stretching */
+      border: 5px solid #333;
+    }
+
+    .cert-banner {
+      background-color: #333;
+      padding: 10px 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 40px;
+      font-family: sans-serif;
+    }
+
+    .cert-banner a {
+      display: flex;
+      align-items: center;
+      transition: transform 0.3s ease;
+    }
+
+    .cert-banner a:hover {
+      transform: scale(1.1);
+    }
+
+    .cert-banner img {
+      height: 100px;
+      width: auto;
+      opacity: 0.9;
+    }
+
+    .terminal-section {
+      padding: 20px 20px 0px 20px;
+      background-color: white;
+      display: flex;
+      justify-content: center;
+    }
+
+    .terminal-window {
+      width: 100%;
+      max-width: 800px;
+      background-color: #1e1e1e;
+      border-radius: 10px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+      overflow: hidden;
+      font-family: "Space Mono", monospace;
+    }
+
+    .terminal-header {
+      background-color: #333;
+      padding: 10px 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dot { height: 12px; width: 12px; border-radius: 50%; }
+    .red { background-color: #ff5f56; }
+    .yellow { background-color: #ffbd2e; }
+    .green { background-color: #27c93f; }
+
+    .terminal-title {
+      color: #aaa;
+      font-size: 0.8rem;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .terminal-body {
+      padding: 25px;
+      color: #f8f8f2;
+      caret-color: transparent;
+    }
+
+    .command {
+      color: #50fa7b;
+      margin-bottom: 20px;
+      caret-color: transparent;
+    }
+
+    .skills-output {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .skill-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.1rem;
+      color: #8be9fd; /* A clean cyan color */
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 10px;
+      height: 1.2rem;
+      background-color: #f8f8f2;
+      animation: blink 1s infinite;
+      vertical-align: middle;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
+    .coursework-section {
+      padding: 20px 20px;
+      background-color: white;
+      font-family: "Space Mono", monospace;
+    }
+
+    .course-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .course-category h3 {
+      border-bottom: 2px solid #333;
+      padding-bottom: 10px;
+      font-size: 1.2rem;
+    }
+
+    .course-category ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .course-category li {
+      margin: 10px 0;
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 600px) {
+      .banner {
+        flex-direction: column;
+        min-height: auto;
+        padding: 40px 20px;
+        text-align: center;
+      }
+      .nd-link,
+      .social-links,
+      .banner-nav {
+        position: static;
+        margin: 10px auto;
+        justify-content: center;
+        width: 100%;
+      }
+      .nd-link { order: 1; }       /* ND Logo at top */
+      .banner__content { order: 2; } /* Your Name in middle */
+      .social-links { order: 3; }    /* Social Icons below name */
+      .banner-nav { order: 4; }      /* Nav links at the very bottom */
+
+      .banner__text {
+        font-size: 2.8rem;
+        margin: 10px 0;
+      }
+
+      .banner-nav {
+        gap: 15px;
+        flex-wrap: wrap;
+      }
+
+      .banner-nav a {
+        font-size: 0.8rem;
+      }
+
+      .about-container {
+        flex-direction: column-reverse;
+        text-align: center;
+        gap: 30px;
+      }
+
+      .about-content h2 {
+        font-size: 2rem;
+      }
+
+      .about-image img {
+        width: 200px;
+        height: 200px;
+      }
+
+      .cert-banner {
+        flex-wrap: wrap;
+        gap: 20px;
+        padding: 20px;
+      }
+    }
+
+  </style>
+
+<body>
+<div class="banner">
+  <div class="banner__content">
+    <div class="banner__text">
+      Sean &nbsp; Coath
+    </div>
+  </div>
+  <!-- ND LOGO -->
+  <a href="https://altech.nd.edu/programs/ba-in-computer-science/" target="_blank" class="nd-link">
+    <img src="img/nd.png" alt="University of Notre Dame" title="University of Notre Dame">
+  </a>
+
+  <!-- Resume -->
+  <a href="img/COATH_RESUME.pdf" target="_blank" class="resume-link" title="Download Resume">
+    <i class="fa-solid fa-file-pdf"></i> Resume
+  </a>
+
+  <!-- Email, LinkedIn, Github, Research Logos -->
+  <div class="social-links">
+    <a href="mailto:scoath@nd.edu"><i class="fa-solid fa-envelope"></i></a>
+    <a href="https://linkedin.com/in/sean-coath/" target="_blank"><i class="fa-brands fa-linkedin"></i></a>
+    <a href="https://github.com/SeanCoa" target="_blank"><i class="fa-brands fa-github"></i></a>
+    <a href="https://lucyinstitute.nd.edu/centers-and-labs/data-inference-analytics-and-learning-dial-lab/" target="_blank"><i class="fa-solid fa-microscope"></i></a>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="banner-nav">
+    <a href="#about">About</a>
+    <a href="#projects">Projects</a>
+    <a href="#research">Research</a>
+  </nav>
+</div>
+
+<section id="about" class="about-section">
+  <div class="about-container">
+    <div class="about-content">
+      <h2>About Me</h2>
+      <div class="location-tag">
+        <i class="fa-solid fa-location-dot"></i> Greater Chicago Area, IL
+      </div>
+      <p>
+        I'm a Computer Science student at the University of Notre Dame pursuing a
+        double major in Computer Science and Philosophy of Science & Mathematics.
+        Through the Glynn Family Honors Program, I collaborate closely with distinguished
+        faculty in small-group settings and will complete an extended thesis in my senior year.
+      </p>
+      <p>
+        Currently, I'm working as a research assistant at Notre Dame's Data Inference &
+        Analytics Learning (DIAL) Lab where I'm developing Responsible, Inclusive,
+        Safe, & Ethical (RISE) AI.
+      </p>
+      <p>
+        In my spare time, I play tuba in the ND Marching Band and ND Symphony Orchestra.
+      </p>
+    </div>
+    <div class="about-image">
+      <img src="img/headshot.png" alt="Sean Coath Headshot">
+    </div>
+  </div>
+</section>
+
+<div class="cert-banner">
+  <a href="https://www.lpi.org/our-certifications/linux-essentials-overview" target="_blank">
+    <img src="img/LPI.png" alt="LPI Linux Essentials" title="LPI Linux Essentials">
+  </a>
+  <a href="https://aws.amazon.com/certification/certified-cloud-practitioner/" target="_blank">
+    <img src="img/CloudPractitioner.png" alt="AWS Cloud Practitioner" title="AWS Cloud Practitioner">
+  </a>
+  <a href="https://aws.amazon.com/certification/certified-solutions-architect-associate/" target="_blank">
+    <img src="img/SolutionsArchitect.png" alt="AWS Solutions Architect" title="AWS Solutions Architect">
+  </a>
+</div>
+
+<section id="languages" class="terminal-section">
+  <div class="terminal-window">
+    <div class="terminal-header">
+      <span class="dot red"></span>
+      <span class="dot yellow"></span>
+      <span class="dot green"></span>
+      <span class="terminal-title">bash — 80x24</span>
+    </div>
+    <div class="terminal-body">
+      <p class="command">sean@nd:~$ list-skills --programming</p>
+      <div class="skills-output">
+        <div class="skill-item"><i class="fa-brands fa-c"></i> C</div>
+        <div class="skill-item"><i class="fa-brands fa-python"></i> Python</div>
+        <div class="skill-item"><i class="fa-brands fa-html5"></i> HTML5</div>
+        <div class="skill-item"><i class="fa-brands fa-css3"></i> CSS3</div>
+        <div class="skill-item"><i class="fa-brands fa-git-alt"></i> Git</div>
+        <div class="skill-item"><i class="fa-brands fa-linux"></i> Linux</div>
+      </div>
+      <p class="command">sean@nd:~$ <span class="cursor">|</span></p>
+    </div>
+  </div>
+</section>
+
+
+<section id="coursework" class="coursework-section">
+  <div class="coursework-container">
+    <h2>Relevant Coursework</h2>
+    <p>* : in progress</p>
+    <div class="course-grid">
+      <div class="course-category">
+        <h3>Computer Science</h3>
+        <ul>
+          <li>Fundamentals of Computing</li>
+          <li>Data Structures*</li>
+          <li>Software & Systems Programming*</li>
+        </ul>
+      </div>
+      <div class="course-category">
+        <h3>Mathematics</h3>
+        <ul>
+          <li>Calculus I-III</li>
+          <li>Linear Algebra</li>
+          <li>Discrete Mathematics</li>
+
+        </ul>
+      </div>
+      <div class="course-category">
+        <h3>Philosophy</h3>
+        <ul>
+          <li>Honors Philosophy Seminar</li>
+          <li>Formal Logic*</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+</body>
+</html>
