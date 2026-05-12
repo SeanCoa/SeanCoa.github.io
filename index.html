@@ -188,14 +188,116 @@
       border: 5px solid #333;
     }
 
-    .cert-banner {
+    .education-section {
+      padding: 10px 20px;
+      background-color: #fff;
+      font-family: "Space Mono", monospace;
+      overflow-x: hidden;
+    }
+
+    .edu-pipeline {
       display: flex;
       flex-direction: row;
+      align-items: flex-start; /* Aligns markers to a single imaginary line */
       justify-content: center;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding-top: 20px;
+    }
+
+    .edu-node {
+      display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 40px;
-      background-color: #333;
-      padding: 20px 0;
+      width: 350px;
+    }
+
+    .node-box {
+      border: 2px solid #333;
+      padding: 15px;
+      text-align: center;
+      background: white;
+      margin-bottom: 20px;
+      min-height: 100px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .main-box {
+      border-color: #002b5b; /* Notre Dame Navy */
+      background: #f8faff;
+      box-shadow: 4px 4px 0px #002b5b;
+    }
+
+    .node-marker {
+      width: 16px;
+      height: 16px;
+      background: #333;
+      border-radius: 50%;
+      margin-bottom: 10px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .node-marker.highlight {
+      background: #002b5b;
+      box-shadow: 0 0 10px rgba(0,43,91,0.5);
+    }
+
+    .edu-path-horizontal {
+      flex-grow: 1;
+      height: 2px;
+      background: repeating-linear-gradient(
+        to right,
+        #333,
+        #333 5px,
+        transparent 5px,
+        transparent 10px
+      );
+      margin-top: 127px; /* Align with the vertical center of markers */
+      min-width: 50px;
+    }
+
+    .node-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: #888;
+      letter-spacing: 2px;
+    }
+
+    .edu-tags {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .edu-tags span {
+      background: #002b5b;
+      color: white;
+      font-size: 0.65rem;
+      padding: 3px 8px;
+      border-radius: 3px;
+    }
+
+    /* Responsive Mobile Layout */
+    @media (max-width: 800px) {
+      .edu-pipeline {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .edu-path-horizontal {
+        width: 2px;
+        height: 40px;
+        margin: 10px 0;
+        background: repeating-linear-gradient(to bottom, #333, #333 5px, transparent 5px, transparent 10px);
+      }
+
+      .edu-node {
+        width: 100%;
+      }
     }
 
     .cert-banner a {
@@ -207,22 +309,30 @@
     .cert-banner a:hover {
       transform: scale(1.1);
     }
+    .cert-banner {
+      background-color: #333;
+      padding: 20px 40px; /* More horizontal padding for desktop */
+      display: flex;
+      flex-direction: row; /* Desktop is a single row */
+      justify-content: center; /* Centers the whole group */
+      align-items: center;
+      gap: 30px;
+    }
 
     .cert-inline-text {
       color: white;
       font-family: "Space Mono", monospace;
       text-transform: uppercase;
-      font-size: 0.9rem;
-      letter-spacing: 1px;
-      margin-right: 20px;
-      padding-right: 20px;
+      font-size: 1.1rem;
+      letter-spacing: 2px;
+      white-space: nowrap; /* Prevents "Certifications" from wrapping */
     }
 
     .cert-icons-row {
       display: flex;
-      justify-content: center;
-      align-items: center;
+      flex-direction: row;
       gap: 40px;
+      align-items: center;
     }
 
     .cert-banner img {
@@ -309,7 +419,7 @@
     }
 
     .coursework-section {
-      padding: 20px 20px;
+      padding: 10px 20px;
       background-color: white;
       font-family: "Space Mono", monospace;
     }
@@ -338,7 +448,107 @@
       font-size: 0.95rem;
     }
 
-    @media (max-width: 600px) {
+    .experience-section {
+      padding: 0px 20px;
+      background-color: #fcfcfc;
+      border-top: 1px solid #eaeaea;
+      font-family: "Space Mono", monospace;
+    }
+
+    .experience-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .experience-container h2 {
+      font-size: 2.5rem;
+      text-transform: uppercase;
+      margin-bottom: 60px;
+      text-align: center;
+    }
+
+    /* The vertical line */
+    .timeline {
+      position: relative;
+      padding-left: 50px; /* Space for the line on the left */
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 5px; /* Position of the line */
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background-color: #333;
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 50px;
+    }
+
+    /* The circle on the line */
+    .timeline-dot {
+      position: absolute;
+      left: -51px; /* Align with the vertical line */
+      top: 5px;
+      width: 14px;
+      height: 14px;
+      background-color: #002b5b; /* Notre Dame Navy */
+      border-radius: 50%;
+      border: 2px solid #fff;
+      box-shadow: 0 0 0 2px #333;
+      z-index: 2;
+    }
+
+    .timeline-content {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 5px 5px 0px #eee; /* Sharp shadow for a tech feel */
+      border: 1px solid #ddd;
+    }
+
+    .timeline-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .timeline-header h3 {
+      margin: 0;
+      font-size: 1.3rem;
+      color: #333;
+    }
+
+    .timeline-date {
+      font-size: 0.85rem;
+      color: #666;
+    }
+
+    .timeline-org {
+      font-weight: bold;
+      color: #002b5b;
+      margin: 5px 0 15px 0;
+    }
+
+    .timeline-bullets {
+      padding-left: 20px;
+      margin: 0;
+      list-style-type: square;
+    }
+
+    .timeline-bullets li {
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      color: #444;
+    }
+
+    @media (max-width: 650px) {
       .banner {
         flex-direction: column;
         min-height: auto;
@@ -405,6 +615,11 @@
         gap: 20px;
         padding: 20px;
       }
+
+      .timeline { padding-left: 30px; }
+      .timeline::before { left: 0; }
+      .timeline-dot { left: -36px; }
+      .timeline-header { flex-direction: column; }
     }
 
   </style>
@@ -437,15 +652,15 @@
   <!-- Navigation -->
   <nav class="banner-nav">
     <a href="#about">About</a>
+    <a href="#experience">Experience</a>
     <a href="#projects">Projects</a>
-    <a href="#research">Research</a>
   </nav>
 </div>
 
 <section id="about" class="about-section">
   <div class="about-container">
     <div class="about-content">
-      <h2>About Me</h2>
+      <h2><u>About Me</u></h2>
       <div class="location-tag">
         <i class="fa-solid fa-location-dot"></i> Greater Chicago Area, IL
       </div>
@@ -468,7 +683,6 @@
       <img src="img/headshot.png" alt="Sean Coath Headshot">
     </div>
   </div>
-</section>
 
 <section id="languages" class="terminal-section">
   <div class="terminal-window">
@@ -476,7 +690,7 @@
       <span class="dot red"></span>
       <span class="dot yellow"></span>
       <span class="dot green"></span>
-      <span class="terminal-title">bash — 80x24</span>
+      <span class="terminal-title">bash — 80x24 (My Technical Proficiencies)</span>
     </div>
     <div class="terminal-body">
       <p class="command">sean@nd:~$ list-skills --programming</p>
@@ -493,20 +707,46 @@
   </div>
 </section>
 
-<div class="cert-banner">
-  <span class="cert-inline-text">Certifications:</span>
-  <div class="cert-icons-row">
-    <a href="https://www.lpi.org/..." target="_blank">
-      <img src="img/LPI.png" alt="LPI Linux Essentials">
-    </a>
-    <a href="https://aws.amazon.com/..." target="_blank">
-      <img src="img/CloudPractitioner.png" alt="AWS Cloud Practitioner">
-    </a>
-    <a href="https://aws.amazon.com/..." target="_blank">
-      <img src="img/SolutionsArchitect.png" alt="AWS Solutions Architect">
-    </a>
-  </div>
-</div>
+  <section id="education" class="education-section">
+    <div class="education-container">
+      <h2>Education</h2>
+      <div class="edu-pipeline">
+
+        <!-- High School Node -->
+        <div class="edu-node">
+          <div class="node-box">
+            <h3>Notre Dame College Prep</h3>
+            <p>High School Diploma | Niles, IL</p>
+            <div class="edu-tags">
+              <span>Valedictorian</span>
+              <span>National Merit</span>
+              <span>AP Scholar</span>
+            </div>
+          </div>
+          <div class="node-marker"></div>
+          <div class="node-label">August 2021 - May 2025</div>
+        </div>
+
+        <!-- Horizontal Connection -->
+        <div class="edu-path-horizontal"></div>
+
+        <!-- University Node -->
+        <div class="edu-node">
+          <div class="node-box main-box">
+            <h3>University of Notre Dame</h3>
+            <p class="degree">Computer Science & Philosophy Double Major, Mathematics Minor</p>
+            <div class="edu-tags">
+              <span>Glynn Family Honors Program </span>
+              <span>Dean's List</span>
+            </div>
+          </div>
+          <div class="node-marker highlight"></div>
+          <div class="node-label">August 2025 - May 2029</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
 
 <section id="coursework" class="coursework-section">
   <div class="coursework-container">
@@ -540,5 +780,109 @@
     </div>
   </div>
 </section>
+
+  <div class="cert-banner">
+    <span class="cert-inline-text">Certifications:</span>
+    <div class="cert-icons-row">
+      <a href="https://www.lpi.org/..." target="_blank">
+        <img src="img/LPI.png" alt="LPI Linux Essentials">
+      </a>
+      <a href="https://aws.amazon.com/..." target="_blank">
+        <img src="img/CloudPractitioner.png" alt="AWS Cloud Practitioner">
+      </a>
+      <a href="https://aws.amazon.com/..." target="_blank">
+        <img src="img/SolutionsArchitect.png" alt="AWS Solutions Architect">
+      </a>
+    </div>
+  </div>
+</section>
+
+<section id="experience" class="experience-section">
+  <div class="experience-container">
+    <h2><u>Experience</u></h2>
+    <div class="timeline">
+
+      <!-- DIAL Lab -->
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-header">
+            <h3>AI Research Assistant</h3>
+            <span class="timeline-date">August 2026 – Present</span>
+          </div>
+          <p class="timeline-org">Data Inference & Analytics Learning (DIAL) Lab</p>
+          <ul class="timeline-bullets">
+            <li>Collaborating under Dr. Chawla to develop Responsible, Inclusive, Safe, & Ethical (RISE) AI frameworks.</li>
+            <li>MORE.</li>
+            <li>MORE.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-header">
+            <h3>Historical Data Visualization Researcher</h3>
+            <span class="timeline-date">May 2026 – Present</span>
+          </div>
+          <p class="timeline-org">University of Notre Dame Department of History</p>
+          <ul class="timeline-bullets">
+            <li>Working with Dr. Ragland to develop an AI-powered GIS representation of world history
+              for an upcoming ND history course in Spring 2027.</li>
+            <li>MORE.</li>
+            <li>MORE.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-header">
+            <h3>Video RL Specialist & AI Trainer</h3>
+            <span class="timeline-date">May 2026 – Present</span>
+          </div>
+          <p class="timeline-org">Handshake AI Fellowship</p>
+          <ul class="timeline-bullets">
+            <li>Developing and evaluating domain-specific prompts to assess lingering performance
+            weaknesses of LLMs</li>
+            <li>Analyzing LLM outputs for accuracy, clarity, and depth in specialized subfields.</li>
+            <li>MORE.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-header">
+            <h3>Research Computing Scholar</h3>
+            <span class="timeline-date">June 2023</span>
+          </div>
+          <p class="timeline-org">University of Notre Dame Center for Research Computing</p>
+          <ul class="timeline-bullets">
+            <li>Participated in pre-college program, designing technical architecture for an
+              AI-driven college recommendation service</li>
+            <li>Studied data-intensive scientific modeling, distributed clusters, and enterprise-level systems.</li>
+            <li>Researched ethical constraints of student data privacy when analyzing open-source educational databases.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-header">
+            <h3>Completed My First Programming Project at Age 9</h3>
+            <span class="timeline-date">2016</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
 </body>
 </html>
