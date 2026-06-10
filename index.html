@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Sean Coath</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Monoton&display=swap" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Mono&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="icon" type="image/png" href="img/nd.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sean Coath</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Monoton&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="icon" type="image/png" href="img/nd.png">
   <style>
     html, body {
       margin: 0;
@@ -267,18 +267,27 @@
     }
 
     .edu-tags {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      margin-top: 10px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 15px;
+      max-width: 320px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .edu-tags span {
       background: #002b5b;
       color: white;
       font-size: 0.65rem;
-      padding: 3px 8px;
+      padding: 8px 10px;
       border-radius: 3px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 35px;
+      text-align: center;
+      line-height: 1.2;
     }
 
     /* Responsive Mobile Layout */
@@ -449,9 +458,10 @@
     }
 
     .experience-section {
-      padding: 0px 20px;
-      background-color: #fcfcfc;
+      padding: 60px 20px;
+      background-color: #f8f9fa; /* Slightly darker to separate from Projects */
       border-top: 1px solid #eaeaea;
+      border-bottom: 1px solid #eaeaea;
       font-family: "Space Mono", monospace;
     }
 
@@ -548,6 +558,94 @@
       color: #444;
     }
 
+    /* --- NEW PROJECTS SECTION CSS --- */
+    .projects-section {
+      padding: 80px 20px;
+      background-color: #ffffff; /* Contrast against the Experience section */
+      font-family: "Space Mono", monospace;
+    }
+
+    .projects-container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .projects-container h2 {
+      font-size: 2.5rem;
+      text-transform: uppercase;
+      margin-bottom: 50px;
+      text-align: center;
+    }
+
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 40px;
+    }
+
+    .project-card {
+      border: 2px solid #333;
+      border-radius: 8px;
+      padding: 25px;
+      background-color: #fff;
+      box-shadow: 6px 6px 0px #002b5b; /* Ties into your ND color scheme */
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s ease;
+    }
+
+    .project-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .project-card h3 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      color: #333;
+      font-size: 1.4rem;
+    }
+
+    .project-card p {
+      color: #444;
+      line-height: 1.5;
+      flex-grow: 1; /* Pushes the button to the bottom evenly */
+      margin-bottom: 20px;
+    }
+
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 25px;
+    }
+
+    .project-tags span {
+      background-color: #f2f2f2;
+      color: #333;
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+    }
+
+    .project-link {
+      display: inline-block;
+      text-align: center;
+      background-color: #002b5b;
+      color: white;
+      text-decoration: none;
+      padding: 12px 20px;
+      border-radius: 4px;
+      font-weight: bold;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      transition: background-color 0.3s ease;
+    }
+
+    .project-link:hover {
+      background-color: #001a38;
+    }
+
     @media (max-width: 650px) {
       .banner {
         flex-direction: column;
@@ -631,25 +729,21 @@
       Sean &nbsp; Coath
     </div>
   </div>
-  <!-- ND LOGO -->
   <a href="https://altech.nd.edu/programs/ba-in-computer-science/" target="_blank" class="nd-link">
     <img src="img/nd.png" alt="University of Notre Dame" title="University of Notre Dame">
   </a>
 
-  <!-- Resume -->
   <a href="img/COATH_RESUME.pdf" target="_blank" class="resume-link" title="Download Resume">
     <i class="fa-solid fa-file-pdf"></i> Resume
   </a>
 
-  <!-- Email, LinkedIn, Github, Research Logos -->
   <div class="social-links">
     <a href="mailto:scoath@nd.edu"><i class="fa-solid fa-envelope"></i></a>
-    <a href="https://linkedin.com/in/sean-coath/" target="_blank"><i class="fa-brands fa-linkedin"></i></a>
+    <a href="https://www.linkedin.com/in/sean-coath/" target="_blank"><i class="fa-brands fa-linkedin"></i></a>
     <a href="https://github.com/SeanCoa" target="_blank"><i class="fa-brands fa-github"></i></a>
     <a href="https://lucyinstitute.nd.edu/centers-and-labs/data-inference-analytics-and-learning-dial-lab/" target="_blank"><i class="fa-solid fa-microscope"></i></a>
   </div>
 
-  <!-- Navigation -->
   <nav class="banner-nav">
     <a href="#about">About</a>
     <a href="#experience">Experience</a>
@@ -665,24 +759,26 @@
         <i class="fa-solid fa-location-dot"></i> Greater Chicago Area, IL
       </div>
       <p>
-        I'm a Computer Science student at the University of Notre Dame pursuing a
-        double major in Computer Science and Philosophy of Science & Mathematics.
-        Through the Glynn Family Honors Program, I collaborate closely with distinguished
+        I'm a second-year student at the University of Notre Dame pursuing a
+        triple major in Computer Science, Philosophy of Science & Mathematics, and ACMS.
+        Through my membership in the Glynn Family Honors Program, I collaborate closely with distinguished
         faculty in small-group settings and will complete an extended thesis in my senior year.
       </p>
       <p>
-        Currently, I'm working as a research assistant at Notre Dame's Data Inference &
-        Analytics Learning (DIAL) Lab where I'm developing Responsible, Inclusive,
-        Safe, & Ethical (RISE) AI.
+        Currently, I'm working as a research assistant with Notre Dame's Data Inference &
+        Analytics Learning (DIAL) Lab, a research assistant with the Notre Dame History Department,
+        and an AI Trainer with Handshake AI Fellowship.
       </p>
       <p>
-        In my spare time, I enjoy playing tuba in the ND Marching Band and ND Symphony Orchestra.
+        In my spare time, I enjoy tutoring high school students preparing for standardized tests and
+        playing tuba in the ND Marching Band and ND Symphony Orchestra.
       </p>
     </div>
     <div class="about-image">
       <img src="img/headshot.png" alt="Sean Coath Headshot">
     </div>
   </div>
+</section>
 
 <section id="languages" class="terminal-section">
   <div class="terminal-window">
@@ -707,46 +803,43 @@
   </div>
 </section>
 
-  <section id="education" class="education-section">
-    <div class="education-container">
-      <h2>Education</h2>
-      <div class="edu-pipeline">
+<section id="education" class="education-section">
+  <div class="education-container">
+    <h2>Education</h2>
+    <div class="edu-pipeline">
 
-        <!-- High School Node -->
-        <div class="edu-node">
-          <div class="node-box">
-            <h3>Notre Dame College Prep</h3>
-            <p>High School Diploma</p>
-            <div class="edu-tags">
-              <span>Valedictorian</span>
-              <span>11 AP Courses</span>
-              <span>35 ACT</span>
-            </div>
+      <div class="edu-node">
+        <div class="node-box">
+          <h3>Notre Dame College Prep</h3>
+          <p>High School Diploma</p>
+          <div class="edu-tags">
+            <span>Valedictorian</span>
+            <span>11 AP Courses</span>
+            <span>35 ACT</span>
           </div>
-          <div class="node-marker"></div>
-          <div class="node-label">August 2021 - May 2025</div>
         </div>
-
-        <!-- Horizontal Connection -->
-        <div class="edu-path-horizontal"></div>
-
-        <!-- University Node -->
-        <div class="edu-node">
-          <div class="node-box main-box">
-            <h3>University of Notre Dame</h3>
-            <p class="degree">Computer Science & Philosophy Double Major, Mathematics Minor</p>
-            <div class="edu-tags">
-              <span>Glynn Family Honors Program </span>
-              <span>Dean's List</span>
-            </div>
-          </div>
-          <div class="node-marker highlight"></div>
-          <div class="node-label">August 2025 - May 2029</div>
-        </div>
-
+        <div class="node-marker"></div>
+        <div class="node-label">August 2021 - May 2025</div>
       </div>
+
+      <div class="edu-path-horizontal"></div>
+
+      <div class="edu-node">
+        <div class="node-box main-box">
+          <h3>University of Notre Dame</h3>
+          <p class="degree">B.A. CS, Philosophy, & ACMS Triple Major</p>
+          <div class="edu-tags">
+            <span>Glynn Family Honors</span>
+            <span>Dean's List</span>
+          </div>
+        </div>
+        <div class="node-marker highlight"></div>
+        <div class="node-label">August 2025 - May 2029</div>
+      </div>
+
     </div>
-  </section>
+  </div>
+</section>
 
 <section id="coursework" class="coursework-section">
   <div class="coursework-container">
@@ -767,7 +860,6 @@
           <li>Calculus I-III</li>
           <li>Linear Algebra</li>
           <li>Discrete Mathematics</li>
-
         </ul>
       </div>
       <div class="course-category">
@@ -781,28 +873,26 @@
   </div>
 </section>
 
-  <div class="cert-banner">
-    <span class="cert-inline-text">Certifications:</span>
-    <div class="cert-icons-row">
-      <a href="https://www.lpi.org/..." target="_blank">
-        <img src="img/LPI.png" alt="LPI Linux Essentials">
-      </a>
-      <a href="https://aws.amazon.com/..." target="_blank">
-        <img src="img/CloudPractitioner.png" alt="AWS Cloud Practitioner">
-      </a>
-      <a href="https://aws.amazon.com/..." target="_blank">
-        <img src="img/SolutionsArchitect.png" alt="AWS Solutions Architect">
-      </a>
-    </div>
+<div class="cert-banner">
+  <span class="cert-inline-text">Certifications:</span>
+  <div class="cert-icons-row">
+    <a href="https://www.lpi.org/..." target="_blank">
+      <img src="img/LPI.png" alt="LPI Linux Essentials">
+    </a>
+    <a href="https://aws.amazon.com/..." target="_blank">
+      <img src="img/CloudPractitioner.png" alt="AWS Cloud Practitioner">
+    </a>
+    <a href="https://aws.amazon.com/..." target="_blank">
+      <img src="img/SolutionsArchitect.png" alt="AWS Solutions Architect">
+    </a>
   </div>
-</section>
+</div>
 
 <section id="experience" class="experience-section">
   <div class="experience-container">
     <h2><u>Experience</u></h2>
     <div class="timeline">
 
-      <!-- DIAL Lab -->
       <div class="timeline-item">
         <div class="timeline-dot"></div>
         <div class="timeline-content">
@@ -810,7 +900,7 @@
             <h3>AI Research Assistant</h3>
             <span class="timeline-date">August 2026 – Present</span>
           </div>
-          <p class="timeline-org">University of Notre Dame Data Inference & Analytics Learning (DIAL) Lab</p>
+          <p class="timeline-org">Data Inference & Analytics Learning (DIAL) Lab</p>
           <ul class="timeline-bullets">
             <li>Collaborating under Dr. Chawla to develop Responsible, Inclusive, Safe, & Ethical (RISE) AI frameworks.</li>
             <li>MORE.</li>
@@ -846,9 +936,25 @@
           <p class="timeline-org">Handshake AI Fellowship</p>
           <ul class="timeline-bullets">
             <li>Developing and evaluating domain-specific prompts to assess lingering performance
-            weaknesses of LLMs</li>
+              weaknesses of LLMs</li>
             <li>Analyzing LLM outputs for accuracy, clarity, and depth in specialized subfields.</li>
             <li>MORE.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-header">
+            <h3>ACT/SAT Tutor</h3>
+            <span class="timeline-date">June 2026 - Present</span>
+          </div>
+          <p class="timeline-org">Tried & True Tutoring</p>
+          <ul class="timeline-bullets">
+            <li>ONE.</li>
+            <li>TWO.</li>
+            <li>THREE.</li>
           </ul>
         </div>
       </div>
@@ -878,6 +984,39 @@
             <span class="timeline-date">2016</span>
           </div>
         </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="projects" class="projects-section">
+  <div class="projects-container">
+    <h2><u>Projects</u></h2>
+    <div class="project-grid">
+
+      <div class="project-card">
+        <h3>2D Golf Simulation Engine</h3>
+        <div class="project-tags">
+          <span>C</span>
+          <span>X11</span>
+          <span>Physics Simulation</span>
+        </div>
+        <p>A custom 2D golf simulation game built entirely in C. Features a ground-up physics engine, custom level editor, and specialized low-level graphics rendering within a Linux environment.</p>
+
+        <a href="golf-engine.html" class="project-link">View Documentation</a>
+      </div>
+
+      <div class="project-card">
+        <h3>Biographical Data Mapper</h3>
+        <div class="project-tags">
+          <span>Python</span>
+          <span>QGIS</span>
+          <span>Web Scraping</span>
+        </div>
+        <p>A specialized research tool that utilizes custom Python scripts to scrape biographical data of historical scientific figures, filtering and exporting the data into dynamic QGIS interactive webmaps.</p>
+
+        <a href="webmap.html" class="project-link">View Interactive Map</a>
       </div>
 
     </div>
