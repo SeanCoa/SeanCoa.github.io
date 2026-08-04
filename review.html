@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DSB Random Review — spot-check auditor</title>
+<style>
+  :root{
+    --bg:#e7eae6; --panel:#fbfcfb; --panel-2:#f3f5f2;
+    --ink:#1b211e; --muted:#5e6a64; --faint:#8a938e; --line:#d3d8d2;
+    --run1:#0f766e; --run1-fill:#c3e9e2;
+    --flag:#a52020; --flag-fill:#f6dede; --good:#166534; --good-fill:#d6ead9;
+    --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --serif:Georgia,"Iowan Old Style",Cambria,"Times New Roman",serif;
+    --mono:ui-monospace,"SF Mono","Cascadia Code",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.5}
+  button{font-family:inherit;font-size:inherit;cursor:pointer}
+
+  header{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);
+    padding:10px 18px;display:flex;flex-wrap:wrap;gap:14px 22px;align-items:center}
+  .brand{font-weight:700;letter-spacing:.02em}
+  .brand small{display:block;font-weight:400;color:var(--faint);font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+  .loaders{display:flex;gap:14px;flex-wrap:wrap;align-items:center;flex:1}
+  .filepick{display:flex;flex-direction:column;gap:2px}
+  .filepick label{font-size:11px;color:var(--muted);font-weight:600}
+  .filepick .name{font-size:11px;color:var(--faint);font-family:var(--mono);max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  input[type=file]{font-size:12px;max-width:200px}
+  .chk{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+
+  .banner{padding:8px 18px;font-size:13px;background:var(--flag-fill);color:var(--flag);border-bottom:1px solid var(--line)}
+  .banner.ok{background:var(--good-fill);color:var(--good)}
+
+  .toolbar{position:sticky;top:53px;z-index:19;background:var(--panel-2);border-bottom:1px solid var(--line);
+    padding:8px 18px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .toolbar button{border:1px solid var(--line);background:var(--panel);border-radius:7px;padding:6px 11px;color:var(--ink)}
+  .toolbar button:hover{border-color:var(--faint)}
+  .toolbar button.primary{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .toolbar .spacer{flex:1}
+  .progress{font-size:12.5px;color:var(--muted)}
+  .progress b{color:var(--ink)}
+  .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:middle}
+  .dot.flag{background:var(--flag)} .dot.good{background:var(--good)}
+
+  main{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0;height:calc(100vh - 102px)}
+  @media(max-width:860px){main{grid-template-columns:1fr;height:auto}}
+  .col{overflow-y:auto;padding:20px 22px}
+  .col.source{border-right:1px solid var(--line);background:var(--panel)}
+  .col.fields{background:var(--panel-2)}
+
+  .eyebrow{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);font-weight:700;margin:0 0 4px}
+  .figname{font-family:var(--serif);font-size:23px;line-height:1.2;margin:0 0 2px}
+  .rawmeta{font-size:12px;color:var(--muted);margin-bottom:12px;font-family:var(--mono)}
+  .rawmeta.warn{color:var(--flag)}
+
+  .searchbar{display:flex;gap:7px;align-items:center;margin:0 0 12px}
+  .searchbar input{flex:1;border:1px solid var(--line);border-radius:8px;padding:7px 10px;font-size:13px;font-family:var(--mono)}
+  .searchbar input:focus{outline:none;border-color:var(--run1);box-shadow:0 0 0 3px var(--run1-fill)}
+  .searchbar .nav{display:flex;gap:4px;align-items:center;font-size:12px;color:var(--muted);white-space:nowrap}
+  .searchbar .nav button{border:1px solid var(--line);background:var(--panel);border-radius:6px;padding:4px 8px;color:var(--ink)}
+  mark.hl-s{background:#fff1a8;box-shadow:inset 0 -2px 0 #e8c531;border-radius:2px}
+  mark.hl-s.cur{background:#ffd84d;box-shadow:inset 0 -2px 0 #c99700}
+
+  .entry{font-family:var(--serif);font-size:15.5px;line-height:1.62;white-space:pre-wrap;word-wrap:break-word;color:#242b28}
+  .sources{margin-top:16px;padding-top:12px;border-top:1px dashed var(--line);font-family:var(--serif);font-size:13px;color:var(--muted);white-space:pre-wrap}
+  .sources h4{font-family:var(--sans);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin:0 0 6px}
+
+  .group{margin-bottom:16px}
+  .group h3{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);font-weight:700;margin:0 0 6px;padding-bottom:4px;border-bottom:1px solid var(--line)}
+  .frow{display:flex;gap:10px;align-items:flex-start;padding:5px 6px;border-radius:7px}
+  .frow:hover{background:var(--panel)}
+  .frow.flagged{background:var(--flag-fill)}
+  .frow .fk{font-family:var(--mono);font-size:11.5px;color:var(--muted);flex:0 0 190px;padding-top:2px;word-break:break-word}
+  .frow .fv{font-family:var(--mono);font-size:13px;flex:1;min-width:0;word-break:break-word;white-space:pre-wrap}
+  .frow .fv.empty{color:var(--faint);font-style:italic}
+  .frow.compact{padding-top:1px;padding-bottom:1px}
+  .frow.compact .fv,.frow.compact .fk{padding-top:0}
+  .frow.compact .flagbtn{padding-top:0;padding-bottom:0}
+  .frow .flagbtn{flex:0 0 auto;border:1px solid var(--line);background:var(--panel);border-radius:6px;padding:2px 8px;color:var(--faint);font-size:13px}
+  .frow.flagged .flagbtn{border-color:var(--flag);background:#fff;color:var(--flag)}
+  .fnote{margin:2px 0 6px 200px}
+  .fnote input{width:calc(100% - 10px);border:1px solid var(--flag);border-radius:6px;padding:5px 8px;font-size:12.5px;font-family:var(--sans)}
+  .fnote input:focus{outline:none;box-shadow:0 0 0 3px var(--flag-fill)}
+
+  .general{margin-top:14px;padding:10px;border:1px dashed var(--line);border-radius:9px;background:var(--panel)}
+  .general label{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:700}
+  .general textarea{width:100%;margin-top:6px;border:1px solid var(--line);border-radius:7px;padding:8px;font-family:var(--sans);font-size:13px;min-height:52px;resize:vertical}
+  .general textarea:focus{outline:none;border-color:var(--run1);box-shadow:0 0 0 3px var(--run1-fill)}
+
+  #empty{max-width:560px;margin:60px auto;color:var(--muted);text-align:center}
+  #empty h2{font-family:var(--serif);color:var(--ink)}
+  #empty ol{text-align:left;display:inline-block;line-height:1.9}
+  kbd{font-family:var(--mono);font-size:11px;background:var(--panel);border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:1px 5px}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">DSB Random Review<small>blind spot-check auditor</small></div>
+  <div class="loaders">
+    <div class="filepick">
+      <label>Finalized database CSV</label>
+      <input type="file" id="f-db" accept=".csv">
+      <span class="name" id="n-db"></span>
+    </div>
+    <div class="filepick">
+      <label>Raw entries CSV</label>
+      <input type="file" id="f-raw" accept=".csv">
+      <span class="name" id="n-raw"></span>
+    </div>
+    <label class="chk"><input type="checkbox" id="hide-cats"> hide Disciplines, Means of Support &amp; Patronage</label>
+  </div>
+</header>
+
+<div id="banner" class="banner" style="display:none"></div>
+
+<div class="toolbar" id="toolbar" style="display:none">
+  <button id="rand" class="primary">🎲 Random figure</button>
+  <button id="randnew">Random unreviewed</button>
+  <button id="markrev">Mark reviewed</button>
+  <span class="progress" id="progress"></span>
+  <div class="spacer"></div>
+  <button id="save">Save progress</button>
+  <input type="file" id="loadsession" accept=".json" style="display:none">
+  <button id="loadbtn">Load progress</button>
+  <button id="report" class="primary">Download report ▾ <b id="flagcount">0</b></button>
+</div>
+
+<main id="main" style="display:none">
+  <section class="col source">
+    <p class="eyebrow">Source entry</p>
+    <h1 class="figname" id="rawname"></h1>
+    <div class="rawmeta" id="rawmeta"></div>
+    <div class="searchbar">
+      <input id="srch" type="text" placeholder="search this entry…">
+      <span class="nav"><span id="srchcount"></span>
+        <button id="srchprev" title="previous (Shift+Enter)">▲</button>
+        <button id="srchnext" title="next (Enter)">▼</button></span>
+    </div>
+    <div class="entry" id="entry"></div>
+    <div class="sources" id="sources" style="display:none"></div>
+  </section>
+  <section class="col fields">
+    <p class="eyebrow">Database record <span id="rowpos"></span></p>
+    <h1 class="figname" id="dbname"></h1>
+    <div class="rawmeta">flag any field that's wrong, then move on</div>
+    <div id="fields"></div>
+    <div class="general">
+      <label>General note for this figure (optional)</label>
+      <textarea id="gennote" placeholder="anything wrong not tied to one field — misalignment, wrong person, etc."></textarea>
+    </div>
+  </section>
+</main>
+
+<div class="empty" id="empty">
+  <h2>Load the two files to begin a spot check</h2>
+  <p>Everything runs in your browser. Nothing is uploaded anywhere.</p>
+  <ol>
+    <li><b>Finalized database CSV</b> — your completed, reviewed database</li>
+    <li><b>Raw entries CSV</b> — the aggregate source entries (name, content, sources)</li>
+  </ol>
+  <p style="font-size:12px;color:var(--faint)">Then hit <b>Random figure</b>. Raw text on the left (searchable),
+  the database record on the right. Flag any errors; download them as a report.
+  Keys: <kbd>n</kbd> next random · <kbd>r</kbd> mark reviewed.</p>
+</div>
+
+<script>
+"use strict";
+const S={db:null,dbIdx:{},raw:null,rawByRow:{},cur:-1,
+  flags:{}, reviewed:new Set(), search:"", searchAt:0, seen:[]};
+
+/* ---------- CSV ---------- */
+function parseCSV(text){
+  text=text.replace(/\r\n/g,"\n").replace(/\r/g,"\n");
+  const rows=[];let row=[],f="",q=false,i=0;
+  while(i<text.length){const c=text[i];
+    if(q){ if(c==='"'){ if(text[i+1]==='"'){f+='"';i+=2;continue;} q=false;i++;continue;} f+=c;i++;continue; }
+    if(c==='"'){q=true;i++;continue;}
+    if(c===','){row.push(f);f="";i++;continue;}
+    if(c==="\n"){row.push(f);rows.push(row);row=[];f="";i++;continue;}
+    f+=c;i++;
+  }
+  if(f.length||row.length){row.push(f);rows.push(row);}
+  return rows.filter(r=>!(r.length===1&&r[0]===""));
+}
+function escapeHTML(s){return String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));}
+function escapeRE(s){return s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");}
+
+/* ---------- cell access ---------- */
+function cell(row,name){const ci=S.dbIdx[name];return ci==null?"":(row[ci]||"");}
+function figName(i){const r=S.db.rows[i];return (cell(r,"Last_Name")||"?")+", "+(cell(r,"First_Name")||"?");}
+function splitMulti(v){return (v||"").split(";").map(s=>s.trim()).filter(s=>s&&s!=="None");}
+
+// Coordinate columns are never shown anywhere (hidden by name, so duplicates go too).
+const HIDE=new Set(["Born_Latitude","Born_Longitude","Died_Latitude","Died_Longitude",
+  "Education_Coordinates","Not_Available_and_Not_Consulted_List"]);
+// Hidden only when the "hide Disciplines, Means of Support & Patronage" box is checked.
+const HIDE_TOGGLE=new Set(["Scientific_Disciplines","Scientific_Disciplines_Notes",
+  "Means_of_Support","Means_of_Support_Notes","Patronage_Types","Patronage_Notes"]);
+
+function fmtYears(a,b){
+  const A=(a||"").trim()||"Unknown", B=(b||"").trim()||"Unknown";
+  return A===B?A:(A+"\u2013"+B);
+}
+function eduStops(instStr,locStr){
+  const insts=splitMulti(instStr), stops=splitMulti(locStr);
+  const n=Math.max(insts.length,stops.length), out=[];
+  const yearLike=s=>/^-?\d{1,4}$/.test((s||"").trim());
+  for(let k=0;k<n;k++){
+    const institution=insts[k]||"Not Specified";
+    const parts=(stops[k]||"").split(",").map(s=>s.trim());
+    let place, years="";
+    // The last two parts are the start/end years when either looks like a year number.
+    // This handles both 5-part (City, Region, Country, Start, End) and 4-part
+    // (City, Country, Start, End) stops, or none when there are no year fields.
+    if(parts.length>=2 && (yearLike(parts[parts.length-1])||yearLike(parts[parts.length-2]))){
+      place=parts.slice(0,parts.length-2).filter(p=>p&&p!=="Unknown").join(", ");
+      years=fmtYears(parts[parts.length-2],parts[parts.length-1]);
+    }else{
+      place=parts.filter(p=>p&&p!=="Unknown").join(", ");
+    }
+    out.push({institution,place,years});
+  }
+  return out;
+}
+function eduDisplay(i){
+  const r=S.db.rows[i];
+  const stops=eduStops(cell(r,"Education_Institution"),cell(r,"Education_Locations"));
+  if(!stops.length)return "None";
+  return stops.map(s=>{
+    let str=s.institution;
+    if(s.place)str+=" @ "+s.place;
+    if(s.years)str+=" ("+s.years+")";
+    return str;
+  }).join("\n");
+}
+// value shown for a field key -- handles the synthetic "Education" stops field
+function displayValue(i,key){return key==="Education"?eduDisplay(i):cell(S.db.rows[i],key);}
+
+/* ---------- field groups ---------- */
+const GROUPS=[
+  ["Identity",["Last_Name","First_Name","Alt_Name","Gender"]],
+  ["Birth",["Born_Town","Born_Country","Born_Day","Born_Month","Born_Year","Dates_Born_Certain"]],
+  ["Death",["Died_Town","Died_Country","Died_Day","Died_Month","Died_Year","Date_Died_Certain"]],
+  ["Life span",["Dates_Lifespan"]],
+  ["Father",["Father_Occupation","Father_Is_Wealthy","Father_Notes"]],
+  ["Education",["Education","Education_Degrees","Education_Notes"]],
+  ["Religion",["Religion_Affiliation","Religion_Affiliation_Certain","Religion_Notes"]],
+  ["Disciplines",["Scientific_Disciplines","Scientific_Disciplines_Notes"]],
+  ["Means of support",["Means_of_Support","Means_of_Support_Notes"]],
+  ["Patronage",["Patronage_Types","Patronage_Notes"]],
+  ["Instruments",["Instruments","Instruments_Notes"]],
+  ["Societies",["Scientific_Societies_Membership","Scientific_Societies_Notes"]],
+  ["Sources & compiler",["Sources_List","Compiler_Details_Notes"]],
+  ["Extraction meta",["Disagreement_Count","Inconsistent_Fields"]],
+];
+
+/* ---------- loading ---------- */
+function loadFile(file,kind){
+  const rd=new FileReader();
+  rd.onload=()=>{
+    const rows=parseCSV(rd.result);
+    if(kind==="db"){
+      const header=(rows[0]||[]).map(h=>h.trim());
+      S.dbIdx={};header.forEach((h,i)=>{if(!(h in S.dbIdx))S.dbIdx[h]=i;});
+      S.db={header,rows:rows.slice(1)};
+      document.getElementById("n-db").textContent=file.name;
+    }else{
+      const data=rows.slice(1);              // raw file always has a header row
+      S.raw=data.map(r=>({name:(r[0]||"").trim(),
+        content:(r[1]||"").replace(/\\n/g,"\n").trim(),
+        sources:(r[2]||"").replace(/\\n/g,"\n").trim()}));
+      document.getElementById("n-raw").textContent=file.name;
+    }
+    assemble();
+  };
+  rd.readAsText(file);
+}
+document.getElementById("f-db").onchange=e=>e.target.files[0]&&loadFile(e.target.files[0],"db");
+document.getElementById("f-raw").onchange=e=>e.target.files[0]&&loadFile(e.target.files[0],"raw");
+document.getElementById("hide-cats").onchange=()=>{if(S.cur>=0)render();};
+
+function buildRawIndex(){
+  S.rawByRow={};
+  if(!S.raw||!S.db)return;
+  const used=new Set();                       // match each db row to a raw entry by name
+  S.db.rows.forEach((r,i)=>{
+    const last=(cell(r,"Last_Name")||"").toLowerCase().trim();
+    const first=(cell(r,"First_Name")||"").toLowerCase().trim();
+    let found=-1;
+    for(let j=0;j<S.raw.length;j++){
+      if(used.has(j))continue;
+      const nm=S.raw[j].name.toLowerCase();
+      if(last && nm.includes(last) && (!first||first==="none"||nm.includes(first))){found=j;break;}
+    }
+    if(found<0 && i<S.raw.length) found=i;    // fall back to position
+    S.rawByRow[i]=found;
+    if(found>=0)used.add(found);
+  });
+}
+function assemble(){
+  const b=document.getElementById("banner");
+  if(!S.db){return;}
+  b.style.display="block";
+  if(!S.raw){b.className="banner";b.textContent="Loaded database ("+S.db.rows.length+" rows). Load the raw entries CSV to see source text.";}
+  else{
+    buildRawIndex();
+    const matched=Object.values(S.rawByRow).filter(v=>v>=0).length;
+    b.className="banner ok";
+    b.textContent="Ready: "+S.db.rows.length+" database rows, "+matched+" matched to a raw entry.";
+    setTimeout(()=>{b.style.display="none";},2600);
+  }
+  document.getElementById("toolbar").style.display="flex";
+  document.getElementById("main").style.display="grid";
+  document.getElementById("empty").style.display="none";
+  if(S.cur<0)randomFigure(false);
+}
+
+/* ---------- search highlight ---------- */
+function termRanges(text,term){
+  if(!term)return [];
+  let re;try{re=new RegExp(escapeRE(term),"giu");}catch(e){return [];}
+  const out=[];let m;while((m=re.exec(text))){out.push([m.index,m.index+m[0].length]);if(m.index===re.lastIndex)re.lastIndex++;}
+  return out;
+}
+function paintSource(){
+  const raw=curRaw();
+  const entry=document.getElementById("entry");
+  if(!raw){entry.textContent="(no matching raw entry — try 'by row position', or the raw file may not include this figure)";
+    document.getElementById("sources").style.display="none";document.getElementById("srchcount").textContent="";return;}
+  const text=raw.content;
+  const ranges=S.search?termRanges(text,S.search):[];
+  let out="",pos=0;
+  ranges.forEach((r,idx)=>{out+=escapeHTML(text.slice(pos,r[0]));
+    out+='<mark class="hl-s'+(idx===S.searchAt?" cur":"")+'">'+escapeHTML(text.slice(r[0],r[1]))+"</mark>";pos=r[1];});
+  out+=escapeHTML(text.slice(pos));
+  entry.innerHTML=out;
+  document.getElementById("srchcount").textContent=S.search?(ranges.length?(S.searchAt+1)+"/"+ranges.length:"0/0"):"";
+  const marks=entry.querySelectorAll("mark.hl-s");
+  if(marks.length&&marks[S.searchAt])marks[S.searchAt].scrollIntoView({block:"center",behavior:"smooth"});
+  const src=document.getElementById("sources");
+  if(raw.sources){src.style.display="block";src.innerHTML="<h4>Sources</h4>"+escapeHTML(raw.sources);}
+  else src.style.display="none";
+}
+function curRaw(){const j=S.rawByRow[S.cur];return (j!=null&&j>=0&&S.raw)?S.raw[j]:null;}
+
+/* ---------- render ---------- */
+function render(){
+  const i=S.cur;const r=S.db.rows[i];
+  document.getElementById("dbname").textContent=figName(i);
+  document.getElementById("rowpos").textContent="· row "+(i+1)+" of "+S.db.rows.length;
+  const raw=curRaw();
+  document.getElementById("rawname").textContent=raw?raw.name:"(no raw entry matched)";
+  const meta=document.getElementById("rawmeta");
+  if(raw){
+    const last=(cell(r,"Last_Name")||"").toLowerCase().slice(0,4);
+    const ok=last&&raw.name.toLowerCase().includes(last);
+    meta.className="rawmeta"+(ok?"":" warn");
+    meta.textContent=ok?("matched raw entry"):("⚠ raw heading \""+raw.name+"\" may not match — verify");
+  }else meta.textContent="";
+
+  const F=S.flags[i]||{};
+  const host=document.getElementById("fields");host.innerHTML="";
+  const shown=new Set();
+  const hideExtra=document.getElementById("hide-cats").checked?HIDE_TOGGLE:new Set();
+  const isPresent=k=>!hideExtra.has(k) && (k==="Education"
+    ? (("Education_Institution" in S.dbIdx)||("Education_Locations" in S.dbIdx))
+    : (k in S.dbIdx));
+  const renderGroup=(title,keys)=>{
+    const present=keys.filter(isPresent);
+    if(!present.length)return;
+    const g=document.createElement("div");g.className="group";
+    g.innerHTML="<h3>"+escapeHTML(title)+"</h3>";
+    present.forEach(k=>{
+      shown.add(k);
+      if(k==="Education"){shown.add("Education_Institution");shown.add("Education_Locations");}
+      g.appendChild(renderField(i,k,F));
+    });
+    host.appendChild(g);
+  };
+  GROUPS.forEach(([t,keys])=>renderGroup(t,keys));
+  // Everything not already shown, minus hidden coordinate columns and any toggled-off ones.
+  const other=S.db.header.filter(h=>h&&!shown.has(h)&&!HIDE.has(h)&&!hideExtra.has(h));
+  if(other.length)renderGroup("Other columns",other);
+
+  document.getElementById("gennote").value=(F.general||"");
+  updateProgress();
+  paintSource();
+}
+function renderField(i,key,F){
+  const val=displayValue(i,key);
+  const label=key==="Education"?"Education":key;
+  const flagged=!!(F.fields&&key in F.fields);
+  const empty=(!val||val==="None"||val==="Unknown");
+  const row=document.createElement("div");row.className="frow"+(flagged?" flagged":"")+(empty?" compact":"");
+  row.innerHTML='<span class="fk">'+escapeHTML(label)+'</span>'
+    +'<span class="fv'+(empty?" empty":"")+'">'+escapeHTML(val||"—")+'</span>'
+    +'<button class="flagbtn" title="flag this field">⚑</button>';
+  const noteWrap=document.createElement("div");noteWrap.className="fnote";noteWrap.style.display=flagged?"block":"none";
+  const note=document.createElement("input");note.type="text";note.placeholder="what's wrong? (optional)";
+  note.value=flagged?(F.fields[key]||""):"";
+  noteWrap.appendChild(note);
+
+  row.querySelector(".flagbtn").addEventListener("click",()=>{
+    const ff=(S.flags[i]=S.flags[i]||{});ff.fields=ff.fields||{};
+    if(key in ff.fields){delete ff.fields[key];row.classList.remove("flagged");noteWrap.style.display="none";}
+    else{ff.fields[key]="";row.classList.add("flagged");noteWrap.style.display="block";note.focus();}
+    updateProgress();
+  });
+  note.addEventListener("input",()=>{const ff=(S.flags[i]=S.flags[i]||{});ff.fields=ff.fields||{};ff.fields[key]=note.value;});
+  const wrap=document.createElement("div");
+  wrap.appendChild(row);wrap.appendChild(noteWrap);
+  return wrap;
+}
+document.getElementById("gennote").addEventListener("input",e=>{
+  const ff=(S.flags[S.cur]=S.flags[S.cur]||{});ff.general=e.target.value;updateProgress();});
+
+function hasFlags(i){const F=S.flags[i];if(!F)return false;
+  return (F.fields&&Object.keys(F.fields).length)||(F.general&&F.general.trim());}
+function totalFlags(){let n=0;for(const k in S.flags){const F=S.flags[k];
+  if(F.fields)n+=Object.keys(F.fields).length;if(F.general&&F.general.trim())n+=1;}return n;}
+function flaggedFigures(){return Object.keys(S.flags).filter(k=>hasFlags(k));}
+function updateProgress(){
+  document.getElementById("flagcount").textContent=totalFlags();
+  const flagged=S.flags[S.cur]&&hasFlags(S.cur)?'<span class="dot flag"></span>flagged':'<span class="dot good"></span>no flags';
+  document.getElementById("progress").innerHTML="reviewed <b>"+S.reviewed.size+"</b>/"+S.db.rows.length
+    +" · "+flagged+" · <b>"+flaggedFigures().length+"</b> figures flagged";
+}
+
+/* ---------- navigation ---------- */
+function randomFigure(markPrev){
+  if(markPrev&&S.cur>=0)S.reviewed.add(S.cur);
+  const n=S.db.rows.length;
+  S.cur=Math.floor(Math.random()*n);
+  S.seen.push(S.cur);S.search="";document.getElementById("srch").value="";S.searchAt=0;
+  render();document.querySelectorAll(".col").forEach(c=>c.scrollTop=0);
+}
+function randomUnreviewed(){
+  const pool=[];for(let i=0;i<S.db.rows.length;i++)if(!S.reviewed.has(i))pool.push(i);
+  if(!pool.length){alert("Every figure has been marked reviewed.");return;}
+  S.reviewed.add(S.cur>=0?S.cur:pool[0]);
+  S.cur=pool[Math.floor(Math.random()*pool.length)];
+  S.search="";document.getElementById("srch").value="";S.searchAt=0;
+  render();document.querySelectorAll(".col").forEach(c=>c.scrollTop=0);
+}
+document.getElementById("rand").onclick=()=>randomFigure(false);
+document.getElementById("randnew").onclick=randomUnreviewed;
+document.getElementById("markrev").onclick=()=>{if(S.cur>=0){S.reviewed.add(S.cur);randomUnreviewed();}};
+
+/* ---------- search wiring ---------- */
+function runSearch(q){S.search=q.trim();S.searchAt=0;paintSource();}
+function stepSearch(d){const n=document.querySelectorAll("#entry mark.hl-s").length;if(!n)return;S.searchAt=(S.searchAt+d+n)%n;paintSource();}
+document.getElementById("srch").addEventListener("input",e=>runSearch(e.target.value));
+document.getElementById("srch").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();stepSearch(e.shiftKey?-1:1);}});
+document.getElementById("srchnext").onclick=()=>stepSearch(1);
+document.getElementById("srchprev").onclick=()=>stepSearch(-1);
+document.addEventListener("keydown",e=>{
+  if(!S.db)return;if(e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA")return;
+  if(e.key==="n"){randomFigure(false);} else if(e.key==="r"){if(S.cur>=0){S.reviewed.add(S.cur);randomUnreviewed();}}
+});
+
+/* ---------- report + session ---------- */
+function download(name,text,type){
+  const blob=new Blob([text],{type:type||"text/plain"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+document.getElementById("report").onclick=()=>{
+  const figs=flaggedFigures().map(Number).sort((a,b)=>a-b);
+  if(!figs.length){alert("No errors flagged yet. Flag a field with ⚑ or add a general note, then download.");return;}
+  const L=[];
+  L.push("DSB RANDOM REVIEW — ERROR REPORT");
+  L.push("Generated: "+new Date().toISOString());
+  L.push("Figures reviewed: "+S.reviewed.size+"   Figures flagged: "+figs.length+"   Total flags: "+totalFlags());
+  L.push("=".repeat(60));L.push("");
+  figs.forEach(i=>{
+    L.push("=== "+figName(i)+"   [db row "+(i+1)+"] ===");
+    const raw=(S.rawByRow[i]!=null&&S.rawByRow[i]>=0&&S.raw)?S.raw[S.rawByRow[i]].name:"(no raw match)";
+    L.push("    raw heading: "+raw);
+    const F=S.flags[i];
+    if(F.fields)for(const k of Object.keys(F.fields)){
+      const val=displayValue(i,k).replace(/\n/g," | ");const note=(F.fields[k]||"").trim();
+      L.push("    ["+k+"]  value: "+JSON.stringify(val)+(note?"   — "+note:""));
+    }
+    if(F.general&&F.general.trim())L.push("    general: "+F.general.trim());
+    L.push("");
+  });
+  download("random_review_report.txt",L.join("\n"),"text/plain");
+};
+document.getElementById("save").onclick=()=>{
+  download("random_review_progress.json",JSON.stringify({flags:S.flags,reviewed:[...S.reviewed]},null,0),"application/json");
+};
+document.getElementById("loadbtn").onclick=()=>document.getElementById("loadsession").click();
+document.getElementById("loadsession").onchange=e=>{
+  const file=e.target.files[0];if(!file)return;const rd=new FileReader();
+  rd.onload=()=>{try{const j=JSON.parse(rd.result);S.flags=j.flags||{};S.reviewed=new Set(j.reviewed||[]);
+    if(S.cur>=0)render();else updateProgress();}
+    catch(err){alert("Could not read that progress file.");}};
+  rd.readAsText(file);
+};
+</script>
+</body>
+</html>
